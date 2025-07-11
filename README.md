@@ -68,7 +68,7 @@ This method is for developers who want to run the extension locally, contribute 
 2.  **Open Chrome Developer Tools:**
     * Right-click anywhere on the webpage and select "Inspect" (or press `F12` / `Ctrl+Shift+I` / `Cmd+Option+I`).
 3.  **Navigate to the "WebdriverIO PO" tab:**
-    * Within the Developer Tools window, you will find a new tab labeled "WebdriverIO PO" (or similar, depending on the title defined in `devtools.js`).
+    * Within the Developer Tools window, you will find a new tab labeled "WebdriverIO PO Generator".
 4.  **Click "Generate Page Object":**
     * Inside the "WebdriverIO PO" panel, click the "Generate Page Object" button.
 5.  **View and Copy Code:**
