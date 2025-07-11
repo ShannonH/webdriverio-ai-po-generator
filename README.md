@@ -1,0 +1,162 @@
+# WebdriverIO Page Object Generator (Chrome DevTools Extension)
+
+## Table of Contents
+
+-   [About](#about)
+-   [Features](#features)
+-   [Installation](#installation)
+    -   [From Source (for Developers)](#from-source-for-developers)
+-   [Usage](#usage)
+-   [Development](#development)
+    -   [Prerequisites](#prerequisites)
+    -   [Local Setup](#local-setup)
+    -   [Project Structure](#project-structure)
+    -   [Building the Extension](#building-the-extension)
+    -   [Testing Changes in Chrome](#testing-changes-in-chrome)
+-   [Contributing](#contributing)
+-   [License](#license)
+
+---
+
+## About
+
+The WebdriverIO Page Object Generator is a Chrome DevTools extension designed to streamline the creation of Page Objects for WebdriverIO automation frameworks. By integrating a local TensorFlow.js-based classifier, it analyzes the DOM of the currently inspected webpage to identify common UI elements (like buttons, input fields, links, etc.) and suggests appropriate WebdriverIO selectors. This helps accelerate test automation development by providing a starting point for robust and maintainable Page Objects.
+
+## Features
+
+* **DevTools Integration:** Runs as a dedicated panel within Chrome's Developer Tools for a spacious and ergonomic development experience.
+* **DOM Analysis:** Scans the active webpage's Document Object Model to identify interactive elements.
+* **Local AI Classification:** Utilizes a lightweight, client-side TensorFlow.js model to classify detected elements (e.g., "button", "input", "link").
+* **WebdriverIO Selector Generation:** Generates `$` and `$$` selectors with recommended strategies (e.g., `id`, `name`, `text`, `css`) based on element attributes and classification.
+* **Code Output:** Displays the generated Page Object code directly in the DevTools panel.
+* **Copy to Clipboard:** One-click copy functionality for easy integration into your project.
+
+## Installation
+
+### From Source (for Developers)
+
+This method is for developers who want to run the extension locally, contribute to its development, or test the latest features.
+
+1.  **Clone the repository:**
+    ```bash
+    git clone [https://github.com/your-username/your-repo-name.git](https://github.com/your-username/your-repo-name.git)
+    cd your-repo-name
+    ```
+    *(Replace `your-username/your-repo-name.git` with your actual GitHub repository URL.)*
+
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
+
+3.  **Build the extension:**
+    ```bash
+    npm run build
+    ```
+    This will create a `dist` folder containing the compiled extension files.
+
+4.  **Load into Chrome:**
+    * Open Google Chrome.
+    * Navigate to `chrome://extensions/`.
+    * Enable **"Developer mode"** using the toggle switch in the top-right corner.
+    * Click the **"Load unpacked"** button.
+    * In the file dialog that appears, select the **`dist` folder** from your cloned repository.
+    * The "WebdriverIO PO Generator (DevTools)" extension should now appear in your list of installed extensions.
+
+## Usage
+
+1.  **Open the webpage** you wish to analyze in Chrome.
+2.  **Open Chrome Developer Tools:**
+    * Right-click anywhere on the webpage and select "Inspect" (or press `F12` / `Ctrl+Shift+I` / `Cmd+Option+I`).
+3.  **Navigate to the "WebdriverIO PO" tab:**
+    * Within the Developer Tools window, you will find a new tab labeled "WebdriverIO PO" (or similar, depending on the title defined in `devtools.js`).
+4.  **Click "Generate Page Object":**
+    * Inside the "WebdriverIO PO" panel, click the "Generate Page Object" button.
+5.  **View and Copy Code:**
+    * The panel will display the generated WebdriverIO Page Object code.
+    * Click the "Copy to Clipboard" button to easily copy the code for use in your automation project.
+
+## Development
+
+### Prerequisites
+
+* Node.js (LTS version recommended)
+* npm (comes with Node.js)
+* Google Chrome browser
+
+### Local Setup
+
+1.  Clone the repository and install dependencies as described in the [Installation](#from-source-for-developers) section.
+
+### Project Structure
+```
+├── src/
+│   ├── background.js       # Service worker: handles events and message relay between panel and content scripts.
+│   ├── content.js          # Injected into webpages: interacts with the DOM, sends data to classifier.
+│   ├── devtools.js         # Creates the DevTools panel.
+│   ├── local_classifier.js # Contains the TensorFlow.js model and classification logic.
+│   ├── panel.js            # Logic for the DevTools panel UI: triggers analysis, displays results.
+│   ├── popup.js            # (Legacy/Optional) Original popup logic. Not used in DevTools version.
+│   ├── devtools.html       # HTML entry point for the DevTools page.
+│   ├── panel.html          # HTML for the DevTools panel UI.
+│   └── popup.html          # (Legacy/Optional) Original popup UI.
+├── public/                 # Static assets (e.g., initial TF.js model, icons)
+│   └── icons/
+│       ├── icon16.png
+│       ├── icon48.png
+│       └── icon128.png
+├── dist/                   # Output directory for compiled/bundled extension files (generated by Webpack).
+├── package.json
+├── webpack.config.js
+└── README.md
+```
+### Building the Extension
+
+This project uses Webpack to bundle and compile the JavaScript and HTML files into a production-ready format.
+
+* **Development Build (with watch mode):**
+    ```bash
+    npm run dev
+    ```
+  This command will build the extension and then watch for file changes, automatically rebuilding when modifications are saved. This is highly recommended during active development.
+
+* **Production Build:**
+    ```bash
+    npm run build
+    ```
+  This command creates an optimized, minified build of the extension in the `dist` folder, suitable for distribution.
+
+### Testing Changes in Chrome
+
+To see your local changes reflected in Chrome:
+
+1.  **Ensure your Webpack build is running:** If you are developing, keep `npm run dev` running in your terminal. This ensures your `dist` folder is up-to-date.
+2.  **Reload the Extension in Chrome:**
+    * Go to `chrome://extensions/` in your Chrome browser.
+    * Find the "WebdriverIO PO Generator (DevTools)" extension.
+    * Click the **reload icon** (a circular arrow) on its card. This loads the latest code from your `dist` folder.
+3.  **Hard Refresh the Target Webpage:**
+    * Navigate to the webpage you are testing on.
+    * Perform a **hard refresh** of the page (`Ctrl+Shift+R` on Windows/Linux, `Cmd+Shift+R` on Mac, or right-click the refresh button and select "Empty Cache and Hard Reload"). This is crucial because content scripts (`content.bundle.js`) are injected when the page loads, and a simple refresh might not reload the *new* content script.
+4.  **Re-open DevTools and your Panel:**
+    * Open the Chrome Developer Tools (F12).
+    * Ensure you are on the "WebdriverIO PO" tab.
+
+By following these steps, you will always be testing with the latest version of your extension.
+
+### Debugging
+
+* **For `panel.js` (DevTools UI) and `devtools.js`:** Open the Chrome Developer Tools (F12) on your target webpage, then switch to the "WebdriverIO PO" panel. The console within *this* DevTools window will show logs and errors from your `panel.js` and `devtools.js`.
+* **For `content.js`:** The console of the *main webpage's* Developer Tools (the one you open with F12 on the webpage itself) will show logs and errors from `content.js`.
+* **For `background.js` (Service Worker):**
+    * Go to `chrome://extensions/`.
+    * Find your "WebdriverIO PO Generator (DevTools)" extension.
+    * Click the "service worker" link (usually below "Inspect views" or similar). This will open a dedicated DevTools window for your background script, showing its console logs and allowing you to set breakpoints.
+
+## Contributing
+
+Contributions are welcome! If you have suggestions for improvements, new features, or bug fixes, please open an issue or submit a pull request.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
