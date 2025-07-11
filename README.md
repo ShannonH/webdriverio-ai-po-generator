@@ -39,10 +39,9 @@ This method is for developers who want to run the extension locally, contribute 
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/your-username/your-repo-name.git](https://github.com/your-username/your-repo-name.git)
+    git clone [https://github.com/ShannonH/webdriverio-ai-po-generator.git](https://github.com/ShannonH/webdriverio-ai-po-generator.git)
     cd your-repo-name
     ```
-    *(Replace `your-username/your-repo-name.git` with your actual GitHub repository URL.)*
 
 2.  **Install dependencies:**
     ```bash
@@ -159,4 +158,4 @@ Contributions are welcome! If you have suggestions for improvements, new feature
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://mit-license.org/) file for details.
